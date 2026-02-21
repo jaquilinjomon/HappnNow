@@ -137,35 +137,42 @@
   </div>
 
   <script>
-    const users = { user1: 'pass123', john: 'john@24', sarah: 'sarah@24' };
-    const admins = { admin: 'admin@24', root: 'root@24' };
+const admins = { admin: 'admin@24', root: 'root@24' };
 
-    function login(e) {
-      e.preventDefault();
-      const user = document.getElementById('user').value.trim();
-      const pass = document.getElementById('pass').value.trim();
-      let role = 'user';
-
-      if (admins[user] === pass) {
-        role = 'admin';
-      } else if (users[user] !== pass) {
-        showMsg('Invalid credentials!', 'error');
+function login(e) {
+    e.preventDefault();
+    const username = document.getElementById('user').value.trim();
+    const pass = document.getElementById('pass').value.trim();
+    
+    // 1. CHECK ADMINS
+    if (admins[username] === pass) {
+        const adminData = { user: username, role: 'admin', time: new Date().toLocaleString() };
+        localStorage.setItem('user', JSON.stringify(adminData));
+        showMsg('Admin login successful!', 'success');
+        setTimeout(() => window.location.href = 'admin.html', 1000); // Redirect to admin dash
         return;
-      }
-
-      const data = { user, role, time: new Date().toLocaleString() };
-      localStorage.setItem('user', JSON.stringify(data));
-      showMsg('Login successful!', 'success');
-      setTimeout(() => window.location.href = role === 'admin' ? 'admin.html' : 'reviews.html', 1000);
     }
 
-    function showMsg(text, type) {
-      const msg = document.getElementById('msg');
-      msg.textContent = text;
-      msg.className = `message ${type}`;
-      msg.style.display = 'block';
-    }
+    // 2. CHECK REGISTERED USERS (FROM DATABASE/LOCALSTORAGE)
+    const registeredUsers = JSON.parse(localStorage.getItem('allUsers')) || [];
+    const foundUser = registeredUsers.find(u => u.email === username && u.pass === pass);
 
+    if (foundUser) {
+        const userData = { user: foundUser.name, role: 'user', time: new Date().toLocaleString() };
+        localStorage.setItem('user', JSON.stringify(userData));
+        showMsg('Login successful!', 'success');
+        setTimeout(() => window.location.href = 'userdash.html', 1000); // Redirect to user dash
+    } else {
+        showMsg('Invalid credentials!', 'error');
+    }
+}
+
+function showMsg(text, type) {
+    const msg = document.getElementById('msg');
+    msg.textContent = text;
+    msg.className = `message ${type}`;
+    msg.style.display = 'block';
+}
 
   </script>
 </body>

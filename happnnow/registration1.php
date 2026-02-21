@@ -24,7 +24,7 @@
     border: 3px solid #DEB887;
     box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     width: 100%;
-    max-width: 850px; /* Wider for a professional feel */
+    max-width: 850px;
     position: relative;
     backdrop-filter: blur(10px);
   }
@@ -50,14 +50,12 @@
     text-shadow: 1px 1px 2px rgba(139, 69, 19, 0.2);
   }
 
-  /* The Grid System */
   .form-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
-    gap: 25px; /* Spacing between fields */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
   }
 
-  /* Make address and button span full width */
   .full-width {
     grid-column: span 2;
   }
@@ -83,7 +81,7 @@
     border-radius: 10px;
     font-family: "Georgia", serif;
     background-color: #FFFDFB;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: all 0.3s ease;
   }
 
   input:focus, textarea:focus {
@@ -117,10 +115,9 @@
     box-shadow: 0 12px 20px rgba(210, 105, 30, 0.3);
   }
 
-  /* Responsive Fix for Mobile */
   @media (max-width: 650px) {
     .form-grid {
-      grid-template-columns: 1fr; /* Stack everything on small screens */
+      grid-template-columns: 1fr;
     }
     .full-width {
       grid-column: span 1;
@@ -136,31 +133,32 @@
 <div class="container">
     <h2>Registration</h2>
 
-    <form id="signupForm">
+    <!-- FIX: Added method and name attributes -->
+    <form method="POST" action="">
         <div class="form-grid">
             <div class="field-group">
                 <label for="signupName">Full Name</label>
-                <input type="text" id="signupName" placeholder="e.g. John Doe" required />
+                <input type="text" name="name" id="signupName" placeholder="e.g. John Doe" required />
             </div>
 
             <div class="field-group">
                 <label for="signupEmail">Email Address</label>
-                <input type="email" id="signupEmail" placeholder="john@example.com" required />
+                <input type="email" name="email" id="signupEmail" placeholder="john@example.com" required />
             </div>
 
             <div class="field-group">
                 <label for="signupPassword">Password</label>
-                <input type="password" id="signupPassword" placeholder="Minimum 8 characters" required />
+                <input type="password" name="password" id="signupPassword" placeholder="Minimum 8 characters" required />
             </div>
 
             <div class="field-group">
                 <label for="signupPhone">Phone Number</label>
-                <input type="tel" id="signupPhone" placeholder="+1 (555) 000-0000" required />
+                <input type="tel" name="phone" id="signupPhone" placeholder="+1 (555) 000-0000" required />
             </div>
 
             <div class="field-group full-width">
                 <label for="signupAddress">Residential Address</label>
-                <textarea id="signupAddress" rows="3" placeholder="Street, City, State, Zip Code" required></textarea>
+                <textarea name="address" id="signupAddress" rows="3" placeholder="Street, City, State, Zip Code" required></textarea>
             </div>
 
             <button class="submit-btn full-width" type="submit">Sign Up</button>
@@ -168,27 +166,27 @@
     </form>
 </div>
 
-<script>
-    document.getElementById('signupForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const name = document.getElementById('signupName').value;
-        const email = document.getElementById('signupEmail').value;
-        const phone = document.getElementById('signupPhone').value;
-        const address = document.getElementById('signupAddress').value;
+<?php
+include 'db.php';
 
-        // Note: Cleaned up the 'interest' variable error from your original script
-        alert(`Success!\nAccount created for: ${name}\nEmail: ${email}`);
-        
-        console.log({
-            name: name,
-            email: email,
-            phone: phone,
-            address: address
-        });
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST["name"];
+    $email = $_POST["email"];
+    $password = password_hash($_POST["password"], PASSWORD_DEFAULT); // secure hashing
+    $phone = $_POST["phone"];
+    $address = $_POST["address"];
 
-        this.reset();
-    });
-</script>
+    // FIX: Correct column names
+    $stmt = $conn->prepare("INSERT INTO users (name, email, pass, phone, addr) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $name, $email, $password, $phone, $address);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Account created successfully!'); window.location.href='login.html';</script>";
+    } else {
+        echo "<script>alert('Error: Email already exists'); window.location.href='registration.php';</script>";
+    }
+}
+?>
 
 </body>
 </html>

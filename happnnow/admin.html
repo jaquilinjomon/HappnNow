@@ -393,8 +393,6 @@
   </div>
 
   <script>
-    const users = { user1: 'pass123', john: 'john@24', sarah: 'sarah@24' };
-    const admins = { admin: 'admin@24', root: 'root@24' };
 
     // Load user info
     function loadUserInfo() {
@@ -402,31 +400,6 @@
       document.getElementById('userName').textContent = userData.user.charAt(0).toUpperCase() + userData.user.slice(1);
       document.getElementById('userAvatar').textContent = userData.user.charAt(0).toUpperCase();
     }
-
-    // Sample data
-    const events = [
-      { id: 1, name: 'Summer Music Festival', category: 'Music', date: '2026-06-15', organizer: 'John Events', status: 'pending' },
-      { id: 2, name: 'Tech Conference 2026', category: 'Tech', date: '2026-07-20', organizer: 'Tech Hub', status: 'approved' },
-      { id: 3, name: 'Art Exhibition', category: 'Art', date: '2026-05-30', organizer: 'Sarah Gallery', status: 'pending' }
-    ];
-
-    const bookings = [
-      { id: 'BK001', event: 'Summer Music Festival', customer: 'John Doe', tickets: 2, amount: 150, date: '2026-04-01', status: 'confirmed' },
-      { id: 'BK002', event: 'Tech Conference 2026', customer: 'Jane Smith', tickets: 1, amount: 299, date: '2026-04-02', status: 'confirmed' },
-      { id: 'BK003', event: 'Art Exhibition', customer: 'Mike Brown', tickets: 3, amount: 120, date: '2026-04-03', status: 'pending' }
-    ];
-
-    const payments = [
-      { id: 'PAY001', booking: 'BK001', amount: 150, method: 'Credit Card', date: '2026-04-01', status: 'completed' },
-      { id: 'PAY002', booking: 'BK002', amount: 299, method: 'PayPal', date: '2026-04-02', status: 'completed' },
-      { id: 'PAY003', booking: 'BK003', amount: 120, method: 'Debit Card', date: '2026-04-03', status: 'pending' }
-    ];
-
-    const usersList = [
-      { username: 'user1', email: 'user1@happnnow.com', role: 'User', joined: '2026-01-15', status: 'active' },
-      { username: 'john', email: 'john@happnnow.com', role: 'User', joined: '2026-02-10', status: 'active' },
-      { username: 'sarah', email: 'sarah@happnnow.com', role: 'User', joined: '2026-02-12', status: 'active' }
-    ];
 
     // Show page
     function showPage(pageId) {
